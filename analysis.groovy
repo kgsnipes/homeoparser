@@ -64,8 +64,8 @@ def readPDF()
  	def wr=null
 	try {
 		
- 		def  input = new File("C:\\Users\\kaushik\\Documents\\github\\homeoparser\\medica.pdf")
-         def output = new File("C:\\Users\\kaushik\\Documents\\github\\homeoparser\\ActualText.txt")
+ 		def  input = new File("medica.pdf")
+         def output = new File("ActualText.txt")
          pd = PDDocument.load(input)
          println(pd.getNumberOfPages())
          println(pd.isEncrypted())
@@ -101,7 +101,7 @@ def readPDF()
 def analyzeText()
 {
 	 def medicines=[] as List
-	 def textFile = new File("C:\\Users\\kaushik\\Documents\\github\\homeoparser\\ActualText.txt")
+	 def textFile = new File("ActualText.txt")
 	 def lines = textFile.readLines()
 	 def count=0
 	 for(line in lines)
@@ -115,7 +115,7 @@ def analyzeText()
 
 	 def fileContent=new StringBuffer()
 	 lines.each{String line->fileContent.append(line+"\n")}
-	 def markedFile = new File("C:\\Users\\kaushik\\Documents\\github\\homeoparser\\MarkedText.txt")
+	 def markedFile = new File("MarkedText.txt")
 	 markedFile.write(fileContent.toString())
 
 
@@ -124,7 +124,7 @@ def analyzeText()
 
 def spiltAndSaveMedicines()
 {
-	def textFile = new File("C:\\Users\\kaushik\\Documents\\github\\homeoparser\\MarkedText.txt")
+	def textFile = new File("MarkedText.txt")
 	def lines = textFile.readLines()
 	def chunk=[] as List
 	for(line in lines)
@@ -135,7 +135,7 @@ def spiltAndSaveMedicines()
 			chunk.each{String liner->fileContent.append(liner+"\n")}
 			if(chunk[0]!=null)
 			{
-				def markedFile = new File("C:\\Users\\kaushik\\Documents\\github\\homeoparser\\pdf_content\\"+chunk[0].trim().replaceAll(/\s/,"_")+".txt")
+				def markedFile = new File("pdf_content\\"+chunk[0].trim().replaceAll(/\s/,"_")+".txt")
 				markedFile.write(fileContent.toString())
 				chunk=[] as List
 			}
@@ -156,7 +156,7 @@ def spiltAndSaveMedicines()
 	}
 	def fileContent=new StringBuffer()
 	chunk.each{String line->fileContent.append(line+"\n")}
-	def markedFile = new File("C:\\Users\\kaushik\\Documents\\github\\homeoparser\\pdf_content\\"+chunk[0].trim().replaceAll(/\s/,"_")+".txt")
+	def markedFile = new File("pdf_content\\"+chunk[0].trim().replaceAll(/\s/,"_")+".txt")
 	markedFile.write(fileContent.toString())
 
 }
@@ -176,6 +176,13 @@ def markDoseBoundary(count,lines)
 	}
 }
 
+def readAllFilesAndCreate()
+{
+	 def rootFiles = new File("pdf_content").eachFile(){ 
+         file -> println file.absolutePath 
+      }
+}
+
 
 
    static void main(String[] args) { 
@@ -187,11 +194,9 @@ def markDoseBoundary(count,lines)
 	//fetch.fetchAllContent()
 	//fetch.readPDF()
 	//fetch.analyzeText()
-	fetch.spiltAndSaveMedicines()
-
+	//fetch.spiltAndSaveMedicines()
+	fetch.readAllFilesAndCreate()
 	println "done"
    }
 }
 
-
-//(\s(\(..*\))*.*(Dose)?.*[\-\*\s].*\.)
